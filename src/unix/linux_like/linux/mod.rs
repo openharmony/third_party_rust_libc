@@ -4470,6 +4470,9 @@ cfg_if! {
     } else if #[cfg(target_env = "gnu")] {
         mod gnu;
         pub use self::gnu::*;
+    } else if #[cfg(target_env = "ohos")] {
+        mod musl;
+        pub use self::musl::*;
     }
 }
 
