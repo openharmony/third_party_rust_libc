@@ -14,17 +14,21 @@
 import("//build/ohos.gni")
 
 ohos_cargo_crate("lib") {
-    crate_name = "libc"
-    crate_type = "rlib"
-    crate_root = "src/lib.rs"
-    output_name = "liblibc"
+  crate_name = "libc"
+  crate_type = "rlib"
+  crate_root = "src/lib.rs"
+  output_name = "liblibc"
 
-    sources = ["src/lib.rs"]
-    edition = "2015"
-    cargo_pkg_version = "0.2.139"
-    cargo_pkg_authors = "The Rust Project Developers"
-    cargo_pkg_name = "libc"
-    features = ["std"]
-    build_root = "build.rs"
-    build_sources = ["build.rs"]
+  sources = [ "src/lib.rs" ]
+  edition = "2015"
+  cargo_pkg_version = "0.2.139"
+  cargo_pkg_authors = "The Rust Project Developers"
+  cargo_pkg_name = "libc"
+  features = [
+    "default",
+    "extra_traits",
+    "std",
+  ]
+  build_root = "build.rs"
+  build_sources = [ "build.rs" ]
 }
