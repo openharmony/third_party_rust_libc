@@ -1,15 +1,14 @@
-# libc - Raw FFI bindings to platforms' system libraries
+# libc - 提供 C 标准库的rust侧FFI
 
 [![GHA Status]][GitHub Actions] [![Cirrus CI Status]][Cirrus CI] [![Latest Version]][crates.io] [![Documentation]][docs.rs] ![License]
 
-`libc`提供了所有必要的定义，以便在Rust支持的每个平台上轻松与C
-代码（或 "类C "代码）在Rust支持的每一个平台上的互通。这包括
+`libc`提供了所有必要的定义，以便在Rust轻松与C
+代码（或 "类C "代码）在Rust支持的平台上的调用。这包括
 包括类型定义（如`c_int`），常量（如`EINVAL`）以及
-函数头（例如：`malloc'）。
+函数（例如：`malloc'）。
 
-这个板块导出了所有底层平台的类型、函数和常量。
-根目录下，所以所有项目都可以作为`libc::foo'访问。所有导出的API的类型和值
-所有导出的 API 的类型和值都与 libc 编译的平台一致。
+libc将各类平台中C库的类型、函数和常量导出在根目录下，所以所有项目都可以作为`libc::foo'访问这些API。
+所有导出的API的类型和值都与 libc 编译的平台一致。
 
 关于这个库的设计，更详细的信息可以在这里找到
 [associated RFC][rfc].
@@ -17,7 +16,17 @@
 [rfc]: https://github.com/rust-lang/rfcs/blob/master/text/1291-promote-libc.md
 
 ## 用法
+### 使用Openharmony编译框架
+在你的"BUILD.gn"中使用deps字段添加对libc crate的依赖，例如：
 
+```BUILD.gn
+ohos_rust_shared_library("foo") {
+  source = [ "src/lib.rs" ]
+  deps = [ "//third_party/rust/crates/libc:lib" ]
+}
+```
+
+### 使用Cargo
 在你的 "Cargo.toml "中添加以下内容：
 
 ```toml
@@ -42,10 +51,7 @@ libc = "0.2"
 
 ## Rust版本支持
 
-目前支持的最小Rust工具链版本是**Rust 1.13.0**。
-(libc 目前没有任何关于改变最小支持的
-支持的 Rust 版本；这种政策正在制定中）。需要
-较新的 Rust 特性的 API 只在较新的 Rust 工具链上可用：
+目前支持的最小Rust工具链版本是**Rust 1.13.0**。(libc 目前没有任何计划关于改变最小支持的支持的 Rust 版本）。需要较新的 Rust 特性的 API 只在较新的 Rust 工具链上可用：
 
 | Feature              | Version |
 |----------------------|---------|
@@ -62,11 +68,10 @@ libc = "0.2"
 
 [特定平台文档（master分支）][docs.master]。
 
-见
-[`ci/build.sh`](https://github.com/rust-lang/libc/blob/master/ci/build.sh)
-关于每个Rust工具链的`libc'保证可以在哪些平台上构建。
+见[`ci/build.sh`](https://github.com/rust-lang/libc/blob/master/ci/build.sh)
+关于每个Rust工具链的`libc`保证可以在哪些平台上构建。
 工具链的平台。在[GitHub Actions]和[Cirrus CI]中的测试矩阵显示了
-`libc'测试运行的平台。
+`libc`测试运行的平台。
 <div class="platform_docs"></div>
 
 ## 许可证
@@ -79,23 +84,6 @@ libc = "0.2"
 * [MIT License](https://opensource.org/licenses/MIT)
   ([LICENSE-MIT](https://github.com/rust-lang/libc/blob/master/LICENSE-MIT))
 
-在你的选择下。
-
-## 贡献
-
-我们欢迎所有想要贡献的人。请参阅[贡献
-说明]获取更多信息。
-
-[贡献说明]: https://github.com/rust-lang/libc/blob/master/CONTRIBUTING.md
-
-以任何形式（问题、拉动请求等）为本项目做出的贡献
-必须遵守Rust的[行为准则]。
-
-[行为准则]: https://www.rust-lang.org/policies/code-of-conduct
-
-除非你明确说明，任何有意提交的贡献
-纳入 "libc"，如Apache-2.0许可中所定义的，应按上述规定进行双重许可。
-双重许可，没有任何额外的条款或条件。
 [GitHub Actions]: https://github.com/rust-lang/libc/actions
 [GHA Status]: https://github.com/rust-lang/libc/workflows/CI/badge.svg
 [Cirrus CI]: https://cirrus-ci.com/github/rust-lang/libc
