@@ -2,6 +2,7 @@
 
 [![GHA Status]][GitHub Actions] [![Cirrus CI Status]][Cirrus CI] [![Latest Version]][crates.io] [![Documentation]][docs.rs] ![License]
 
+## 引入背景
 `libc`提供了所有必要的定义，以便在Rust轻松与C
 代码（或 "类C "代码）在Rust支持的平台上的调用。这包括
 包括类型定义（如`c_int`），常量（如`EINVAL`）以及
@@ -15,7 +16,7 @@ libc将各类平台中C库的类型、函数和常量导出在根目录下，所
 
 [rfc]: https://github.com/rust-lang/rfcs/blob/master/text/1291-promote-libc.md
 
-## 用法
+## 用法指导
 ### 使用Openharmony编译框架
 在你的"BUILD.gn"中使用deps字段添加对libc crate的依赖，例如：
 
@@ -94,3 +95,9 @@ libc = "0.2"
 [docs.rs]: https://docs.rs/libc
 [License]: https://img.shields.io/crates/l/libc.svg
 [docs.master]: https://rust-lang.github.io/libc/#platform-specific-documentation
+
+## 开发者贡献
+
+在使用该工具的过程中有任何问题欢迎开发者在社区issue中反馈。
+
+<br>
