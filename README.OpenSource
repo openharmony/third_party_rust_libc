@@ -3,7 +3,7 @@
     "Name": "libc",
     "License": "Apache License V2.0, MIT",
     "License File": "LICENSE-APACHE, LICENSE-MIT",
-    "Version Number": "0.2.139",
+    "Version Number": "0.2.153",
     "Owner": "fangting12@huawei.com",
     "Upstream URL": "https://github.com/rust-lang/libc",
     "Description": "A Rust library that provides bindings to the C standard library."
