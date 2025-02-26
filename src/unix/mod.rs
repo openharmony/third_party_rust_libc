@@ -29,7 +29,7 @@ pub type sighandler_t = ::size_t;
 pub type cc_t = ::c_uchar;
 
 cfg_if! {
-    if #[cfg(any(target_os = "espidf", target_os = "horizon"))] {
+    if #[cfg(any(target_os = "espidf", target_os = "horizon", target_os = "vita"))] {
         pub type uid_t = ::c_ushort;
         pub type gid_t = ::c_ushort;
     } else if #[cfg(target_os = "nto")] {
@@ -41,13 +41,9 @@ cfg_if! {
     }
 }
 
-#[cfg_attr(feature = "extra_traits", derive(Debug))]
-pub enum DIR {}
-impl ::Copy for DIR {}
-impl ::Clone for DIR {
-    fn clone(&self) -> DIR {
-        *self
-    }
+missing! {
+    #[cfg_attr(feature = "extra_traits", derive(Debug))]
+    pub enum DIR {}
 }
 pub type locale_t = *mut ::c_void;
 
@@ -321,7 +317,7 @@ cfg_if! {
     if #[cfg(any(target_os = "l4re", target_os = "espidf"))] {
         // required libraries for L4Re and the ESP-IDF framework are linked externally, ATM
     } else if #[cfg(feature = "std")] {
-        // cargo build, don't pull in anything extra as the libstd dep
+        // cargo build, don't pull in anything extra as the std dep
         // already pulls in all libs.
     } else if #[cfg(all(target_os = "linux",
                         any(target_env = "gnu", target_env = "uclibc"),
@@ -388,11 +384,6 @@ cfg_if! {
         #[link(name = "c")]
         #[link(name = "m")]
         extern {}
-    } else if #[cfg(target_os = "hermit")] {
-        // no_default_libraries is set to false for HermitCore, so only a link
-        // to "pthread" needs to be added.
-        #[link(name = "pthread")]
-        extern {}
     } else if #[cfg(target_env = "illumos")] {
         #[link(name = "c")]
         #[link(name = "m")]
@@ -404,6 +395,12 @@ cfg_if! {
         #[cfg_attr(feature = "rustc-dep-of-std",
                    link(name = "c", cfg(not(target_feature = "crt-static"))))]
         extern {}
+    } else if #[cfg(target_env = "aix")] {
+        #[link(name = "c")]
+        #[link(name = "m")]
+        #[link(name = "bsd")]
+        #[link(name = "pthread")]
+        extern {}
     } else {
         #[link(name = "c")]
         #[link(name = "m")]
@@ -413,21 +410,11 @@ cfg_if! {
     }
 }
 
-#[cfg_attr(feature = "extra_traits", derive(Debug))]
-pub enum FILE {}
-impl ::Copy for FILE {}
-impl ::Clone for FILE {
-    fn clone(&self) -> FILE {
-        *self
-    }
-}
-#[cfg_attr(feature = "extra_traits", derive(Debug))]
-pub enum fpos_t {} // FIXME: fill this out with a struct
-impl ::Copy for fpos_t {}
-impl ::Clone for fpos_t {
-    fn clone(&self) -> fpos_t {
-        *self
-    }
+missing! {
+    #[cfg_attr(feature = "extra_traits", derive(Debug))]
+    pub enum FILE {}
+    #[cfg_attr(feature = "extra_traits", derive(Debug))]
+    pub enum fpos_t {} // FIXME: fill this out with a struct
 }
 
 extern "C" {
@@ -1042,6 +1029,7 @@ extern "C" {
 
     pub fn symlink(path1: *const c_char, path2: *const c_char) -> ::c_int;
 
+    pub fn truncate(path: *const c_char, length: off_t) -> ::c_int;
     pub fn ftruncate(fd: ::c_int, length: off_t) -> ::c_int;
 
     pub fn signal(signum: ::c_int, handler: sighandler_t) -> sighandler_t;
@@ -1074,6 +1062,10 @@ extern "C" {
     pub fn pthread_exit(value: *mut ::c_void) -> !;
     pub fn pthread_attr_init(attr: *mut ::pthread_attr_t) -> ::c_int;
     pub fn pthread_attr_destroy(attr: *mut ::pthread_attr_t) -> ::c_int;
+    pub fn pthread_attr_getstacksize(
+        attr: *const ::pthread_attr_t,
+        stacksize: *mut ::size_t,
+    ) -> ::c_int;
     pub fn pthread_attr_setstacksize(attr: *mut ::pthread_attr_t, stack_size: ::size_t) -> ::c_int;
     pub fn pthread_attr_setdetachstate(attr: *mut ::pthread_attr_t, state: ::c_int) -> ::c_int;
     pub fn pthread_detach(thread: ::pthread_t) -> ::c_int;
@@ -1186,7 +1178,6 @@ extern "C" {
     pub fn dlerror() -> *mut ::c_char;
     pub fn dlsym(handle: *mut ::c_void, symbol: *const ::c_char) -> *mut ::c_void;
     pub fn dlclose(handle: *mut ::c_void) -> ::c_int;
-    pub fn dladdr(addr: *const ::c_void, info: *mut Dl_info) -> ::c_int;
 
     #[cfg(not(all(
         libc_cfg_target_vendor,
@@ -1407,6 +1398,7 @@ extern "C" {
     pub fn lockf(fd: ::c_int, cmd: ::c_int, len: ::off_t) -> ::c_int;
 
 }
+
 cfg_if! {
     if #[cfg(not(any(target_os = "emscripten",
                      target_os = "android",
@@ -1415,6 +1407,14 @@ cfg_if! {
         extern "C" {
             pub fn adjtime(delta: *const timeval, olddelta: *mut timeval) -> ::c_int;
             pub fn stpncpy(dst: *mut c_char, src: *const c_char, n: size_t) -> *mut c_char;
+        }
+    }
+}
+
+cfg_if! {
+    if #[cfg(not(target_os = "aix"))] {
+        extern "C" {
+            pub fn dladdr(addr: *const ::c_void, info: *mut Dl_info) -> ::c_int;
         }
     }
 }
@@ -1434,7 +1434,6 @@ cfg_if! {
     if #[cfg(not(target_os = "redox"))] {
         extern {
             pub fn getsid(pid: pid_t) -> pid_t;
-            pub fn truncate(path: *const c_char, length: off_t) -> ::c_int;
             #[cfg_attr(all(target_os = "macos", target_arch = "x86"),
                        link_name = "pause$UNIX2003")]
             pub fn pause() -> ::c_int;
@@ -1485,6 +1484,11 @@ cfg_if! {
                 errorfds: *mut fd_set,
                 timeout: *mut timespec,
                 sigmask: *const sigset_t,
+            ) -> ::c_int;
+            pub fn sigaction(
+                signum: ::c_int,
+                act: *const sigaction,
+                oldact: *mut sigaction
             ) -> ::c_int;
         }
     } else {
@@ -1564,15 +1568,18 @@ cfg_if! {
     } else if #[cfg(target_os = "haiku")] {
         mod haiku;
         pub use self::haiku::*;
-    } else if #[cfg(target_os = "hermit")] {
-        mod hermit;
-        pub use self::hermit::*;
     } else if #[cfg(target_os = "redox")] {
         mod redox;
         pub use self::redox::*;
     } else if #[cfg(target_os = "nto")] {
         mod nto;
         pub use self::nto::*;
+    } else if #[cfg(target_os = "aix")] {
+        mod aix;
+        pub use self::aix::*;
+    } else if #[cfg(target_os = "hurd")] {
+        mod hurd;
+        pub use self::hurd::*;
     } else {
         // Unknown target_os
     }

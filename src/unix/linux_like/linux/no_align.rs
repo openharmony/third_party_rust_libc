@@ -5,6 +5,7 @@ macro_rules! expand_align {
                 #[cfg(any(target_arch = "x86_64",
                           target_arch = "powerpc64",
                           target_arch = "mips64",
+                          target_arch = "mips64r6",
                           target_arch = "s390x",
                           target_arch = "sparc64",
                           target_arch = "riscv64",
@@ -16,6 +17,7 @@ macro_rules! expand_align {
                 #[cfg(not(any(target_arch = "x86_64",
                               target_arch = "powerpc64",
                               target_arch = "mips64",
+                              target_arch = "mips64r6",
                               target_arch = "s390x",
                               target_arch = "sparc64",
                               target_arch = "riscv64",
@@ -38,6 +40,11 @@ macro_rules! expand_align {
             pub struct pthread_condattr_t {
                 __align: [::c_int; 0],
                 size: [u8; ::__SIZEOF_PTHREAD_CONDATTR_T],
+            }
+
+            pub struct pthread_barrierattr_t {
+                __align: [::c_int; 0],
+                size: [u8; ::__SIZEOF_PTHREAD_BARRIERATTR_T],
             }
 
             pub struct fanotify_event_metadata {
@@ -63,16 +70,20 @@ macro_rules! expand_align {
 
             pub struct pthread_mutex_t {
                 #[cfg(any(target_arch = "mips",
+                          target_arch = "mips32r6",
                           target_arch = "arm",
                           target_arch = "m68k",
+                          target_arch = "csky",
                           target_arch = "powerpc",
                           target_arch = "sparc",
                           all(target_arch = "x86_64",
                               target_pointer_width = "32")))]
                 __align: [::c_long; 0],
                 #[cfg(not(any(target_arch = "mips",
+                              target_arch = "mips32r6",
                               target_arch = "arm",
                               target_arch = "m68k",
+                              target_arch = "csky",
                               target_arch = "powerpc",
                               target_arch = "sparc",
                               all(target_arch = "x86_64",
@@ -83,22 +94,50 @@ macro_rules! expand_align {
 
             pub struct pthread_rwlock_t {
                 #[cfg(any(target_arch = "mips",
+                          target_arch = "mips32r6",
                           target_arch = "arm",
                           target_arch = "m68k",
+                          target_arch = "csky",
                           target_arch = "powerpc",
                           target_arch = "sparc",
                           all(target_arch = "x86_64",
                               target_pointer_width = "32")))]
                 __align: [::c_long; 0],
                 #[cfg(not(any(target_arch = "mips",
+                              target_arch = "mips32r6",
                               target_arch = "arm",
                               target_arch = "m68k",
+                              target_arch = "csky",
                               target_arch = "powerpc",
                               target_arch = "sparc",
                               all(target_arch = "x86_64",
                                   target_pointer_width = "32"))))]
                 __align: [::c_longlong; 0],
                 size: [u8; ::__SIZEOF_PTHREAD_RWLOCK_T],
+            }
+
+            pub struct pthread_barrier_t {
+                #[cfg(any(target_arch = "mips",
+                          target_arch = "mips32r6",
+                          target_arch = "arm",
+                          target_arch = "m68k",
+                          target_arch = "csky",
+                          target_arch = "powerpc",
+                          target_arch = "sparc",
+                          all(target_arch = "x86_64",
+                              target_pointer_width = "32")))]
+                __align: [::c_long; 0],
+                #[cfg(not(any(target_arch = "mips",
+                              target_arch = "mips32r6",
+                              target_arch = "arm",
+                              target_arch = "m68k",
+                              target_arch = "csky",
+                              target_arch = "powerpc",
+                              target_arch = "sparc",
+                              all(target_arch = "x86_64",
+                                  target_pointer_width = "32"))))]
+                __align: [::c_longlong; 0],
+                size: [u8; ::__SIZEOF_PTHREAD_BARRIER_T],
             }
         }
     };
