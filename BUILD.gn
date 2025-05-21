@@ -31,4 +31,6 @@ ohos_cargo_crate("lib") {
   ]
   build_root = "build.rs"
   build_sources = [ "build.rs" ]
+  part_name = "rust_libc"
+  subsystem_name = "thirdparty"
 }
