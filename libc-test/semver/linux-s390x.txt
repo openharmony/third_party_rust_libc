@@ -21,9 +21,6 @@ NFT_MSG_DELOBJ
 NFT_MSG_GETOBJ
 NFT_MSG_GETOBJ_RESET
 NFT_MSG_NEWOBJ
-PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP
-PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
-PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
 SIGSTKFLT
 SIGUNUSED
 SO_BSDCOMPAT
@@ -44,6 +41,7 @@ SYS_epoll_wait
 SYS_eventfd
 SYS_fadvise64
 SYS_fork
+SYS_fstat
 SYS_fstatfs64
 SYS_futimesat
 SYS_get_kernel_syms
@@ -58,6 +56,7 @@ SYS_link
 SYS_lstat
 SYS_mkdir
 SYS_mknod
+SYS_mseal
 SYS_newfstatat
 SYS_nice
 SYS_open
@@ -76,6 +75,7 @@ SYS_s390_pci_mmio_write
 SYS_s390_runtime_instr
 SYS_select
 SYS_sendfile
+SYS_setrlimit
 SYS_sigaction
 SYS_signal
 SYS_signalfd
@@ -99,17 +99,9 @@ SYS_utimes
 SYS_vfork
 TIOCCBRK
 TIOCSBRK
-XCASE
 __psw_t
 flock64
 fpreg_t
 fpregset_t
-getcontext
 greg_t
-makecontext
-mcontext_t
-setcontext
-swapcontext
-sysctl
 termios2
-ucontext_t
