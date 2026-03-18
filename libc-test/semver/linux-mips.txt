@@ -9,6 +9,7 @@ PTRACE_GETREGS
 PTRACE_SETFPREGS
 PTRACE_SETFPXREGS
 PTRACE_SETREGS
+SIGEMT
 SO_PRIORITY
 SO_PROTOCOL
 SYS__sysctl
@@ -30,6 +31,7 @@ SYS_epoll_wait
 SYS_eventfd
 SYS_fcntl64
 SYS_fork
+SYS_fstat
 SYS_fstat64
 SYS_fstatfs64
 SYS_ftime
@@ -77,6 +79,7 @@ SYS_send
 SYS_sendfile
 SYS_sendfile64
 SYS_set_thread_area
+SYS_setrlimit
 SYS_sgetmask
 SYS_sigaction
 SYS_signal
